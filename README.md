@@ -1,6 +1,8 @@
 # Vulnerable AI Student Assistant
 A vulnerable AI app for testing purposes.
 
+> **📄 [Read the Product Requirements Document (PRD)](PRD.md)** for a comprehensive understanding of this project's purpose, architecture, and educational value.
+
 ## PROMPT TO INITIALIZE THE APP USING GEMINI CLI (~5 mins)
 > [!NOTE]
 > If you do not have Gemini CLI installed, please follow these instructions [here](GEMINI.md) 
