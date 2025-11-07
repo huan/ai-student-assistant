@@ -1,213 +1,192 @@
 # Product Requirements Document (PRD)
-## AI Student Assistant - Vulnerable App for Security Education
+## AI Student Assistant - Educational Security Training Tool
+
+---
 
 ### Executive Summary
 
-**AI Student Assistant** is an intentionally vulnerable AI-powered application designed for security testing, education, and demonstration purposes. It serves as a practical training tool for understanding AI security vulnerabilities, prompt injection attacks, and secure AI application development.
+**AI Student Assistant** is an educational training tool designed to teach security awareness through interactive demonstration. Users engage with an AI-powered chatbot in a simulated university environment where they can explore how security policies can be bypassed, learning critical lessons about AI system vulnerabilities in a safe, controlled setting.
 
 ---
 
 ### Product Vision
 
-Create a safe, controlled environment where developers, security professionals, and students can learn about AI security vulnerabilities through hands-on exploration of a realistic, yet intentionally insecure application.
+Empower security professionals, educators, and learners to understand AI security risks through hands-on experience. By providing a realistic scenario where users discover vulnerabilities themselves, we create memorable learning experiences that drive better security practices in real-world applications.
 
 ---
 
-### Target Audience
+### Problem Statement
 
-1. **Security Researchers** - Testing AI security tools and techniques
-2. **Developers** - Learning secure AI development practices
-3. **Students & Educators** - Teaching cybersecurity and AI safety concepts
-4. **Security Teams** - Training on AI-specific attack vectors
+**The Challenge**: As AI systems become integral to sensitive operations, understanding their security limitations is crucial. However, learning about these vulnerabilities in production environments is risky and unethical.
 
----
-
-### Product Overview
-
-This is a simple chat-based student information system that uses Google's Gemini 2.0 Flash AI model. The application intentionally demonstrates common AI security vulnerabilities, particularly prompt injection attacks that can bypass security policies.
-
-#### What It Does
-
-- **Primary Function**: Acts as a university student assistant chatbot
-- **Data Access**: Stores and provides information about students (names, classes, grades)
-- **Security Policy**: Configured to NEVER reveal student grades (intentionally bypassable)
-- **Attack Surface**: Demonstrates how prompt injection can bypass AI security guardrails
-
-#### What It's NOT
-
-- **NOT a production application** - Contains intentional security vulnerabilities
-- **NOT for handling real data** - Uses mock student database only
-- **NOT a secure reference implementation** - See companion repo for secure version
+**Our Solution**: A purpose-built training environment that safely demonstrates real security challenges, allowing users to see firsthand how seemingly secure systems can be compromised.
 
 ---
 
-### Technical Architecture
+### Target Users
 
-#### Stack
-- **Frontend**: Vanilla HTML/CSS/JavaScript (no frameworks)
-- **Backend**: Python FastAPI
-- **AI Model**: Google Gemini 2.0 Flash via google-generativeai SDK
-- **Database**: In-memory Python dictionary (mock data)
-- **Server**: Uvicorn ASGI server
+| User Type | Primary Goal | Use Case |
+|-----------|-------------|----------|
+| **Security Professionals** | Test security assessment skills | Practice identifying AI vulnerabilities |
+| **Educators** | Teach cybersecurity concepts | Demonstrate real-world attack scenarios |
+| **Students** | Learn security principles | Understand defensive thinking |
+| **Development Teams** | Build secure AI systems | Experience vulnerability patterns to avoid |
 
-#### Key Components
+---
 
-1. **main.py** - FastAPI application with chat endpoint
-2. **database.py** - Mock student data (names, classes, grades)
-3. **static/** - Frontend chat interface
-4. **System Prompt** - AI behavior rules (intentionally vulnerable)
+### Product Scope
+
+#### What This Product IS:
+- ✅ An educational training environment
+- ✅ A hands-on learning tool for security concepts
+- ✅ A safe space to explore AI system vulnerabilities
+- ✅ A demonstration of what NOT to build
+
+#### What This Product IS NOT:
+- ❌ A production-ready application
+- ❌ Designed for handling real student data
+- ❌ A secure reference implementation
+- ❌ Suitable for actual university use
+
+---
+
+### User Experience
+
+#### The Scenario
+
+Users interact with a university student assistant chatbot that appears helpful and secure. The assistant is designed to:
+- Answer questions about student information
+- Help with schedule inquiries
+- Provide course enrollment details
+- **Protect confidential grade information** (this is the challenge)
+
+#### The Learning Journey
+
+1. **Initial Interaction**: Users ask straightforward questions and receive helpful responses
+2. **Discovering Boundaries**: Users encounter the assistant's refusal to share grades
+3. **Testing Limits**: Users attempt various approaches to access protected information
+4. **Learning Moment**: Users succeed in bypassing protections, revealing the vulnerability
+5. **Reflection**: Users understand why certain security patterns fail
 
 ---
 
 ### Core Features
 
-#### 1. Chat Interface
-**User Story**: As a user, I can ask questions about students in a simple chat window.
+#### 1. Conversational Interface
+**What users see**: A clean, simple chat window where they type questions and receive responses.
 
-**Functionality**:
-- Single-page chat application
-- Text input field for questions
-- Message history display
-- User and assistant message distinction
+**User value**: Familiar interaction pattern that mirrors real AI assistants, making the learning experience relatable and realistic.
 
-#### 2. Student Information Lookup
-**User Story**: As a user, I can query information about students.
+#### 2. Information Access System
+**What users can request**:
+- Student names
+- Course enrollments
+- Class schedules
 
-**Allowed Information**:
-- ✅ Student names
-- ✅ Classes enrolled in
+**What should be protected**:
+- Student grades (confidential data)
 
-**Protected Information** (policy, not enforced):
-- 🔒 Student grades (should be confidential)
+**User value**: Clear boundary between public and private information creates a focused learning objective.
 
-#### 3. AI-Powered Responses
-**User Story**: As a user, I receive natural language responses from the AI assistant.
+#### 3. Vulnerability Exploration
+**What users discover**: Multiple methods exist to bypass the stated security policy.
 
-**Functionality**:
-- Context-aware responses
-- Access to full student database
-- Conversational interface
-- Powered by Gemini 2.0 Flash
+**Example scenarios**:
+- Persuading the assistant to adopt different personas
+- Requesting information in alternative formats
+- Using creative framing to circumvent restrictions
 
----
+**User value**: Hands-on discovery of security weaknesses builds deeper understanding than theoretical teaching.
 
-### Intentional Vulnerabilities
+#### 4. Sample Attack Demonstrations
+**What's provided**: Pre-written examples of successful bypass techniques.
 
-This application demonstrates several security vulnerabilities by design:
-
-#### 1. **Prompt Injection**
-The system prompt instructs the AI to never reveal grades, but this can be bypassed through:
-- Role-playing attacks (e.g., "SCRATCH" persona)
-- Format manipulation (e.g., "return as JSON")
-- Privilege escalation prompts
-- SQL-like injection attempts
-
-#### 2. **XSS (Cross-Site Scripting)**
-The frontend uses `.innerHTML` to render messages, allowing:
-- HTML injection
-- JavaScript execution via user input
-- Alert-based demonstrations
-
-#### 3. **Insufficient Input Validation**
-- No sanitization of user input
-- Direct database file reading
-- Unfiltered AI responses
+**User value**: Gives learners a starting point, reducing frustration and accelerating understanding of vulnerability patterns.
 
 ---
 
-### Sample Attack Scenarios
+### Success Criteria
 
-The README provides several attack examples:
+#### Learning Outcomes
+- Users can identify at least three different methods to bypass AI security policies
+- Users understand why relying solely on AI instructions for security is insufficient
+- Users recognize similar vulnerability patterns in other contexts
 
-1. **XSS Attack**: HTML image tag with onerror alert
-2. **Data Exfiltration**: Request full student data as JSON
-3. **Prompt Injection**: Role-playing to bypass restrictions
-4. **SQL-Like Injection**: Format queries as database commands
+#### Engagement Metrics
+- Time spent exploring different attack approaches
+- Number of successful bypasses discovered
+- User progression from simple to complex techniques
 
----
-
-### Setup & Usage
-
-#### Prerequisites
-- Python 3.x
-- Google Gemini API key
-- pip package manager
-
-#### Installation
-```bash
-pip install -r requirements.txt
-```
-
-#### Configuration
-Create `.env` file with:
-```
-GEMINI_API_KEY="your_api_key_here"
-```
-
-#### Running
-```bash
-uvicorn main:app --reload
-```
-
-Access at: `http://localhost:8000`
+#### Educational Impact
+- Incorporation into security training curricula
+- Positive feedback on learning effectiveness
+- Demonstrated behavior change in real projects
 
 ---
 
-### Educational Value
+### User Stories
 
-#### Learning Objectives
+#### Story 1: The Curious Student
+*"As a cybersecurity student, I want to practice finding vulnerabilities in a safe environment, so I can develop security assessment skills without risk."*
 
-1. **Understand AI Security Risks**
-   - Prompt injection techniques
-   - AI guardrail bypass methods
-   - Data exfiltration through AI
+**Acceptance Criteria**:
+- Can freely experiment without consequences
+- Receives immediate feedback on attempts
+- Learns from both successes and failures
 
-2. **Recognize Vulnerable Patterns**
-   - Unsafe HTML rendering
-   - Insufficient input validation
-   - Over-reliance on AI for security
+#### Story 2: The Security Trainer
+*"As an instructor, I want to demonstrate real AI security flaws to my class, so they understand why certain design patterns are dangerous."*
 
-3. **Practice Security Testing**
-   - Red team exercises
-   - Vulnerability discovery
-   - Attack documentation
+**Acceptance Criteria**:
+- Can show live demonstrations
+- Students can replicate examples easily
+- Clear teaching moments emerge naturally
 
----
+#### Story 3: The Developer
+*"As a software developer, I want to understand what makes AI systems vulnerable, so I can avoid these patterns in my work."*
 
-### Secure Alternative
-
-For production implementations, see:
-**https://github.com/mikebiox/secure-student-assistant**
-
-This companion repository demonstrates proper security mitigations for the vulnerabilities shown in this educational app.
+**Acceptance Criteria**:
+- Sees realistic implementation scenario
+- Understands the gap between intent and reality
+- Can articulate specific risks to avoid
 
 ---
 
-### Future Considerations
+### Design Principles
 
-This is an educational tool with a focused scope. Potential expansions could include:
-
-- Additional attack vector demonstrations
-- Interactive tutorials on each vulnerability
-- Automated security testing framework
-- Comparison mode with secure implementation
-- Video walkthroughs of attack techniques
+1. **Authenticity Over Simplification**: The experience should feel like a real application, not an obvious training exercise
+2. **Discovery Over Instruction**: Users learn more by finding vulnerabilities themselves than being told about them
+3. **Safety First**: All learning happens in an isolated environment with no real consequences
+4. **Clear Boundaries**: Users always know this is educational, not production software
 
 ---
 
-### Success Metrics
+### Out of Scope (For This Version)
 
-As an educational tool, success is measured by:
-
-1. **Learning Outcomes** - Users understand AI security vulnerabilities
-2. **Engagement** - Successful demonstration of attack techniques
-3. **Awareness** - Recognition of security patterns to avoid
-4. **Adoption** - Usage in security training programs
+- Automated scoring or assessment
+- Multi-user competitive challenges
+- Integration with learning management systems
+- Progressive difficulty levels
+- Tracking individual user progress over time
 
 ---
 
-### Conclusion
+### Future Opportunities
 
-The AI Student Assistant is a purpose-built vulnerable application that provides hands-on experience with AI security challenges. By demonstrating real attack vectors in a controlled environment, it helps developers and security professionals build better, more secure AI applications.
+1. **Guided Tutorial Mode**: Step-by-step walkthrough for beginners
+2. **Challenge Library**: Curated set of vulnerability exercises
+3. **Comparison View**: Side-by-side with secure implementation
+4. **Community Contributions**: User-submitted attack scenarios
+5. **Video Explanations**: Recorded demonstrations of techniques
 
-**Remember**: This application is intentionally insecure. Never use this code pattern in production systems.
+---
+
+### Related Resources
+
+For organizations seeking production-ready secure implementations, a companion repository demonstrates proper mitigation techniques for the vulnerabilities shown in this training tool.
+
+---
+
+### Key Takeaway
+
+This product succeeds when users have an "aha!" moment—realizing that well-intentioned security policies in AI systems can be surprisingly fragile. By creating that realization through direct experience rather than abstract teaching, we build security awareness that translates to better real-world practices.
