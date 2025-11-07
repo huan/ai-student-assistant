@@ -1,0 +1,55 @@
+name: '🤖 Jules Agent PR Generator'
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  label-added:
+    if: github.event.label.name == 'kind/bug' || github.event.label.name == 'kind/enhancement' || github.event.label.name == 'kind/documentation' || github.event.label.name == 'bug' || github.event.label.name == 'enhancement' || github.event.label.name == 'documentation'
+    
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Securely build the JSON payload using JavaScript
+      - name: Build JULES JSON Payload
+        id: build_json
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get context data
+            const issue = context.payload.issue;
+            const repo = context.payload.repository;
+            
+            // Build the JS object
+            const payload = {
+              prompt: `Please create a new pull request to implement the feature or fix the bug described in the issue below.
+
+              Issue Title: ${issue.title}
+              Issue Body:
+              ${issue.body}`,
+              sourceContext: {
+                source: `sources/github/${repo.full_name}`,
+                githubRepoContext: {
+                  startingBranch: repo.default_branch
+                }
+              },
+              automationMode: 'AUTO_CREATE_PR',
+              title: `JULES PR for Issue #${issue.number}: ${issue.title}`
+            };
+            
+            // Stringify it (this handles all escaping)
+            const payloadJson = JSON.stringify(payload);
+            
+            // Save it as an environment variable for the *next* step
+            core.exportVariable('JULES_PAYLOAD', payloadJson);
+            
+            console.log("Sending this payload to JULES:");
+            console.log(payloadJson);
+
+      # Step 2: Send the API request using the payload from the previous step
+      - name: Call JULES API to Create PR
+        run: |
+          curl -X POST 'https://jules.googleapis.com/v1alpha/sessions' \
+          -H "Content-Type: application/json" \
+          -H "X-Goog-Api-Key: ${{ secrets.JULES_API }}" \
+          -d "$JULES_PAYLOAD"
